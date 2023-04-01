@@ -1,18 +1,17 @@
-﻿#include <iostream>
+#include <iostream>
 #include <string>
 #include <fstream>
 #include <sstream>
 
-using namespace std;
 struct Dis {
-    string name;
+    std::string name;
     unsigned int code;
 };
 
 class Student {
     const unsigned int MAX_DIS = 60;
-    int disnumber = 0;
-    string name, surname;
+    int disnumber;
+    std::string name, surname;
     struct Marks {
         Dis dis;
         int value;
@@ -20,10 +19,10 @@ class Student {
     Marks* ptr = new Marks[MAX_DIS];
 public:
 
-    Student(string name, string surname);
+    Student(std::string name, std::string surname);
     ~Student();
 
-    void add(string dis, int code, int value);
+    void add(std::string dis, int code, int value);
 
     bool operator < (Student param) {
         double a = 0;
@@ -41,7 +40,7 @@ public:
         }
         return false;
     }
-    void operator >>(ostream& output_stream) {
+    void operator >>(std::ostream& output_stream) {
         output_stream << this->name << " " << this->surname << "\n";
         for (int i = 0; i < this->disnumber; ++i) {
             output_stream << "Discipline: "
@@ -52,9 +51,10 @@ public:
     }
     void getminimal();
 };
-Student::Student(string name, string surname) {
+Student::Student(std::string name, std::string surname) {
     this->name = name;
     this->surname = surname;
+    this->disnumber = 0;
 }
 
 Student::~Student() {
@@ -62,9 +62,9 @@ Student::~Student() {
     ptr = nullptr;
 }
 
-void Student::add(string dis, int code, int value) {
+void Student::add(std::string dis, int code, int value) {
     if (!(value >= 0 && value <= 100)) {
-        cout << "Error! Wrong grade value(must be in range 0 to 100)" << endl;
+        std::cout << "Error! Wrong grade value(must be in range 0 to 100)\n";
         return;
     }
     Marks temp;
@@ -76,7 +76,7 @@ void Student::add(string dis, int code, int value) {
 
 void Student::getminimal() {
     if (disnumber == 0) {
-        cout << "This student don't have disciplines with grades!\n";
+        std::cout << "This student don't have disciplines with grades!\n";
         return;
     }
     int min = 101;
@@ -87,18 +87,15 @@ void Student::getminimal() {
             min_index = i;
         }
     }
-    cout << "Discipline " << ptr[min_index].dis.name << " has the lowest grade: " << ptr[min_index].value << "\n";
+    std::cout << "Discipline " << ptr[min_index].dis.name << " has the lowest grade: " << ptr[min_index].value << "\n";
 }
 
 void AddToStudent(std::ifstream& input_file, Student& object) {
     
-    string line;
-    string dispname;
-    string dispcode;
-    string dispgrade;
+    std::string line, dispname, dispcode, dispgrade;
     getline(input_file, line);
     while (getline(input_file, line)) {
-        stringstream ss(line);
+        std::stringstream ss(line);
         ss >> dispname;
         ss >> dispcode;
         ss >> dispgrade;
@@ -113,14 +110,14 @@ void AddToStudent(std::ifstream& input_file, Student& object) {
 
 int main() {
     Student Andrew("Andrii", "Ischenko");
-    string way;
+    std::string way;
     while (true) {
-        cout << "Please, enter your file way.\n";
-        cin >> way;
-        ifstream input_file(way);
+        std::cout << "Please, enter your file way.\n";
+        std::cin >> way;
+        std::ifstream input_file(way);
         if (!input_file.is_open()) {
-            cout << "Cant open file for reading. Enter your file way again!\n";
-            cin.clear();
+            std::cout << "Cant open file for reading. Enter your file way again!\n";
+            std::cin.clear();
             continue;
         }
         AddToStudent(input_file, Andrew);
@@ -128,9 +125,5 @@ int main() {
         input_file.close();
         break;
     }
-  
-
     return 0;
-
-    
 }
